@@ -4,7 +4,7 @@ from .Cache import Cache
 from ._get_number_of_cores import get_number_of_jobs
 
 
-def memoize(path, n_jobs=None, exclude_kwargs=None, s3=None, id=0, echo=1, *kwargs):
+def memoize(path, n_jobs=None, exclude_kwargs=None, s3=None, id=0, echo=1, **kwargs):
 	"""
 	makes a decorator for memoizing a function
 	:type path: amazonian.S3.S3Path or Path or str
@@ -13,6 +13,7 @@ def memoize(path, n_jobs=None, exclude_kwargs=None, s3=None, id=0, echo=1, *kwar
 	:type exclude_kwargs: list or tuple
 	:type s3: amazonian.S3.S3
 	:type spark: pyspark.sql.session.SparkSession
+	:type echo: int or bool
 	:rtype: callable
 	"""
 	if n_jobs is None:

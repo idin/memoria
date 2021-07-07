@@ -145,7 +145,7 @@ def represent_and_encode(obj, n_jobs):
 
 def make_hashable(obj, n_jobs):
 	if hasattr(obj, '__hashkey__'):
-		return make_hashable(obj.__hashkey__())
+		return make_hashable(obj.__hashkey__(), n_jobs=n_jobs)
 	else:
 		if isinstance(obj, (tuple, list)):
 			return tuple((make_hashable(e, n_jobs=n_jobs) for e in obj))

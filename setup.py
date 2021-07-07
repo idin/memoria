@@ -8,7 +8,7 @@ def readme():
 
 setup(
 	name='memoria',
-	version='2021.6.22.13',
+	version='2021.6.30.1',
 	description='Python library of hashing and caching',
 	long_description=readme(),
 	long_description_content_type='text/markdown',

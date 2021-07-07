@@ -8,6 +8,7 @@ from ._get_number_of_cores import get_number_of_jobs
 def hash_object(obj, n_jobs=None, base=64):
 	"""
 	:type obj: Obj
+	:type n_jobs: int
 	:type base: int
 	:rtype str
 	"""
