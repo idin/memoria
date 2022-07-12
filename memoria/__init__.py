@@ -2,7 +2,10 @@ from .hash_object import hash_object
 from .hash_object import hash
 from .hash_object import smart_hash
 from .memoize import memoize
-from .Cache import Cache
+from .DiskCache import DiskCache
+from .MemoryCache import MemoryCache
+from .LimitedMemoryCache import LimitedMemoryCache
+from .DualCache import DualCache
 from .make_hashable import make_hashable
 from .to_bytes import to_bytes
 
