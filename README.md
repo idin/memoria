@@ -1,49 +1,141 @@
 # Memoria
 
-*Memoria* is a Python library for hashing and caching.
+A Python package for efficient function result caching with type safety and flexible storage options. Memoria helps you cache function results to avoid redundant computations, with built-in type checking and flexible storage options.
 
 ## Installation
-```shell
+
+```bash
 pip install memoria
 ```
 
-## Benefits of Memoria
+## Quick Start
 
-### Consistency
-Unfortunately the built-in *hash* method is not consistent. 
-For example if you hash a string in two different Python sessions, 
-*e.g.*, `hash('hello world!')`, you may get different results, *e.g.*, `-69600567246316219` or 
-`-8701498716516122875`. However, Memoria is consistent, *e.g.*, 
-`memoria.hash('hello world!')` produces `PwDVM4wattDXKR1HUtszcPP5BHTUVTYQ5X0cO51yAn4=`. 
-We should credit the built-in library [hashlib](https://docs.python.org/3/library/hashlib.html) of course.
-
-### Hashing Unhashable Types
-Memoria can hash virtually anything. If you use the built-in
-*hash* method `hash(dict())` or `hash(list())` you will get an error:
-`TypeError: unhashable type: 'dict'` but **Memoria** can even hash
-*unhashable* types by converting them into a hashable type and 
-hashing the result. To make sure that the hash is still different between
-the original type and the hashable representation, Memoria takes some
-additional measures.
-
-
-
-## Usage
-
+The most basic usage of Memoria involves setting up a cache directory and using the `@cache` decorator on your functions. Here's a simple example:
 
 ```python
-import memoria
+from memoria import cache
 
-# hashing a python object
-memoria.hash(123)
-# >>> 'zi+wk24s9wwA/UiNRKbjeu6JfDi78yCj7yVL87sS0Ko='
+# Set up the cache directory (required before using the cache)
+cache.set_dir("./my_cache")
 
-# base is 64 by default but 32 can also be used. 
-# base 64 should not be used in the file-system, e.g., file names, because it has inadmissible characters.
-memoria.hash(123, base=32)
-# >>> 'PONR14RE5JRGO07T926K99N3FBN8IV1ONFPI18VF4L5V7EOIQ2L0----'
+# Basic usage with the @cache decorator
+@cache()
+def expensive_computation(x, y):
+    # Your expensive computation here
+    return x + y
 
-# dictionaries are unhashable but Memoria can hash them
-memoria.hash({'name': 'John', 'age': 24})
-# >>> 'ioCMz5B8pcdk2CxcbIX/3n3qnQRn/yv9/zvC5Wc0YlU='
+# The result will be cached and reused for the same inputs
+result = expensive_computation(5, 3)  # Computes and caches
+result = expensive_computation(5, 3)  # Returns cached result
 ```
+
+## Features
+
+### Type Safety
+
+Memoria can enforce type checking on your cached results. This is useful when you want to ensure that your function always returns data of a specific type. If the function returns a value of a different type, a TypeError will be raised:
+
+```python
+# Using actual type objects for type checking
+@cache(output_type=list)  # Note: using list, not List
+def get_numbers():
+    return [1, 2, 3]
+
+# This will raise a TypeError if the function returns something other than a list
+# For example:
+@cache(output_type=str)
+def get_string():
+    return "hello"  # This is fine
+    # return 42  # This would raise TypeError: result is not of type str
+```
+
+### Custom Cache Directory Structure
+
+You can organize your cached results in subdirectories by specifying a directory name in the cache decorator. This helps keep your cache organized, especially when dealing with multiple functions:
+
+```python
+@cache(dir="my_subdirectory")
+def my_function():
+    pass
+```
+
+The results will be stored in `./my_cache/my_subdirectory/` instead of directly in the cache root.
+
+### Custom Cache File Naming
+
+By default, Memoria uses a hash of the function arguments to name cache files. You can customize this using the `pattern` parameter, which supports Python's string formatting:
+
+```python
+@cache(pattern="{param1}_{param2}")
+def my_function(param1, param2):
+    pass
+```
+
+This will create cache files named like `param1_value_param2_value.pkl` instead of using a hash.
+
+### Cache Management
+
+Memoria provides several tools to manage your cached results:
+
+```python
+# Check if a result is cached
+@cache()
+def my_function(x):
+    return x * 2
+
+my_function.is_cached(x=5)  # Returns True if cached
+
+# Clear specific cache
+my_function.clear(x=5)  # Clears cache for x=5
+
+# Clear all caches for a function
+my_function.clear_all()
+
+# Enable/disable verbose logging
+cache.verbose_on()  # Shows cache hits/misses
+cache.verbose_off()  # Hides cache hits/misses
+```
+
+The verbose mode is particularly useful during development as it shows you when results are being retrieved from cache versus being computed.
+
+### Global Cache Management
+
+In addition to per-function cache management, Memoria provides global cache management functions:
+
+```python
+# Get current cache directory
+current_dir = cache.get_dir()
+
+# Clear all caches
+cache.clear()
+
+# Unset cache directory
+cache.unset_dir()
+```
+
+These functions help you manage the cache at a global level, useful for cleanup operations or changing cache locations.
+
+## Advanced Usage
+
+### Complex Data Types
+
+Memoria works well with custom data types. When using custom classes, make sure to pass the actual class as the `output_type`:
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Result:
+    value: int
+    description: str
+
+@cache(output_type=Result)  # Using the actual Result class
+def process_data(x: int) -> Result:
+    return Result(value=x*2, description=f"Processed {x}")
+```
+
+The type checking ensures that your function returns an instance of the specified class.
+
+## License
+
+This project is licensed under the Conditional Freedom License (CFL-1.0) - see the LICENSE file for details.

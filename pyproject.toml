@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "memoria"
+version = "2025.4.27.3"
+authors = [
+    { name = "Idin", email = "python@idin.net" },
+]
+description = "A Python package for memory management and caching"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "Conditional Freedom License (CFL-1.0)" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: Other/Proprietary License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/idin/memoria"
+"Bug Tracker" = "https://github.com/idin/memoria/issues" 
+
+# if (Test-Path "dist") { Remove-Item -Recurse -Force "dist" }; python -m build; twine upload dist/*; Write-Host "Build and upload successful!"
