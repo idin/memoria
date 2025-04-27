@@ -39,3 +39,6 @@ htmlcov/
 
 # Project specific
 memoria/cache/*.pkl
+
+# ignore test_cache directory
+test_cache/

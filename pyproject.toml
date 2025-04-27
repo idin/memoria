@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "memoria"
-version = "2025.4.27.3"
+version = "2025.4.27.4"
 authors = [
     { name = "Idin", email = "python@idin.net" },
 ]
