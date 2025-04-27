@@ -2,8 +2,8 @@ from .set_cache_dir import (
     get_cache_dir, is_cache_dir_set, set_cache_dir, is_cache_verbose, 
     cache_verbose_on, cache_verbose_off, clear_cache, unset_cache_dir
 )
+from ..hash import hash_object
 import pickle
-import hashlib
 from functools import wraps
 import os
 from urllib.parse import quote
@@ -49,7 +49,7 @@ def cache(dir: str = None, pattern: str = None, output_type: Optional[type] = No
                 name_ = pattern.format(**safe_args_)
             else:
                 key_ = pickle.dumps(dict(sorted(arg_dict.items())))
-                name_ = hashlib.sha256(key_).hexdigest()
+                name_ = hash_object(key_)
             
             cache_file_ = base_dir_ / f"{name_}{subextension}.pkl"
             return cache_file_
