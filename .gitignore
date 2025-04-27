@@ -1,0 +1,7 @@
+.idea
+.ipynb_checkpoints
+memoria_lucifer_to_pypi.ipynb
+memoria.egg-info
+memoria/__pycache__
+dist
+build
