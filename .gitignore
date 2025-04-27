@@ -38,4 +38,4 @@ ENV/
 htmlcov/
 
 # Project specific
-memoria/cache/*.pkl 
+memoria/cache/*.pkl
